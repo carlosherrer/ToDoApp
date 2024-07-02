@@ -1,0 +1,56 @@
+<div class="w-screen h-screen bg-gray-300 grid items-center">
+  <div class="bg-white mx-4 rounded-lg px-6">
+    <div>
+      <div class="grid mt-10">
+        <p class="font-bold font-sans text-lg">Tasks</p>
+        <p class="text-sm text-gray-500 mt-2">Manage your team's task</p>
+      </div>
+      <div class="flex justify-between">
+        <div>
+          <div class="flex rounded-lg border-2 px-2 hover:cursor-pointer">
+            <div class="flex mt-2 gap-2">
+              <mat-icon fontIcon="filter"></mat-icon>
+              <p>Filter</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <button mat-raised-button (click)="openDialog()">Create Tasks</button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="flex justify-between mt-4">
+        <p class="text-gray-400 w-1/6">Title</p>
+        <p class="text-gray-400 w-1/6">Description</p>
+        <p class="text-gray-400 w-1/6">Due Date</p>
+        <p class="text-gray-400 w-1/6">asigned Person</p>
+        <p class="text-gray-400 w-1/6">Status</p>
+        <p class="text-gray-400 w-1/6">Actions</p>
+      </div>
+    </div>
+    <div *ngFor="let task of tasks">
+      <hr class="mt-4" />
+      <div class="flex justify-between mt-2">
+        <p class="w-1/5">{{ task.taskName }}</p>
+        <p class="w-1/5">{{ task.taskDescription }}</p>
+        <p class="w-1/5">{{ task.date }}</p>
+        <p class="w-1/5">{{ task.assignedPerson }}</p>
+        <select class="w-1/5" (change)="updateTaskStatus(task, $event)" [disabled]="task.status === 'Complete'">
+          <option [value]="'Pending'" [selected]="task.status === 'Pending'">Pending</option>
+          <option [value]="'In Progress'" [selected]="task.status === 'In Progress'">In Progress</option>
+          <option [value]="'Fixing up'" [selected]="task.status === 'Fixing up'">Fixing up</option>
+          <option [value]="'Complete'" [selected]="task.status === 'Complete'">Complete</option>
+        </select>             
+        <div class="w-1/5 flex justify-center gap-10">
+          <div class="bg-yellow-400 px-4 rounded-lg hover:cursor-pointer" (click)="openEditModal(task)">
+            <p>Edit</p>
+          </div>
+          <div class="bg-red-400 px-4 rounded-lg">
+            <p>Delete</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

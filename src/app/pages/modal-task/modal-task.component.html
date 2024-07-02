@@ -1,0 +1,18 @@
+<div class="my-20 mx-10">
+    <p class="text-center">Create a New Task</p>
+    <form [formGroup]="taskForm" class="grid items-center gap-10 mt-8">
+      <input type="text" placeholder="Title Task" formControlName="taskName" />
+      <input type="text" placeholder="Description Task" formControlName="taskDescription" />
+      <input type="text" placeholder="assigned Person" formControlName="assignedPerson">
+      <select formControlName="status">
+        <option value="Pending">Pending</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Fixing Up">Fixing Up</option>
+      </select>
+    </form>
+    <div class="flex justify-between mt-12 text-white">
+      <p class="bg-red-500 px-6 py-2 rounded-lg hover:cursor-pointer" (click)="cancel()">Cancel</p>
+      <p class="bg-green-400 px-6 py-2 rounded-lg hover:cursor-pointer" (click)="addTask()">Add</p>
+    </div>
+  </div>
+  
