@@ -2,11 +2,9 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import {
-  MatDialog,
-} from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { ModalTaskComponent } from '../modal-task/modal-task.component';
-import { ServiceService } from '../../service.service';
+import { ServiceService, TaskItem } from '../../service.service';
 import { ModalEditComponent } from '../modaledit/modaledit.component';
 
 @Component({
@@ -14,11 +12,13 @@ import { ModalEditComponent } from '../modaledit/modaledit.component';
   standalone: true,
   imports: [CommonModule, MatIconModule, MatButtonModule],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css'
+  styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-
-  tasks: any[] = [];
+  tasks: TaskItem[] = [];
+  assignedPersons: string[] = [];
+  statusFilter: string = '';
+  personFilter: string = '';
 
   constructor(private serviceService: ServiceService) {}
 
@@ -30,6 +30,7 @@ export class DashboardComponent implements OnInit {
     this.serviceService.getTasks().subscribe(
       (data) => {
         this.tasks = data;
+        this.assignedPersons = [...new Set(data.map(task => task.assignedPerson))]; // Extrae personas asignadas únicas
       },
       (error) => {
         console.error('Error fetching tasks:', error);
@@ -42,10 +43,10 @@ export class DashboardComponent implements OnInit {
   openDialog(): void {
     this.dialog.open(ModalTaskComponent, {
       width: 'fullscreen',
-    });
+    }).afterClosed().subscribe();
   }
 
-  updateTaskStatus(task: any, event: any) {
+  updateTaskStatus(task: TaskItem, event: any) {
     const newStatus = (event.target as HTMLSelectElement).value;
     task.status = newStatus;
     this.serviceService.updateTask(task).subscribe(
@@ -58,7 +59,7 @@ export class DashboardComponent implements OnInit {
     );
   }
 
-  openEditModal(task: any): void {
+  openEditModal(task: TaskItem): void {
     const dialogRef = this.dialog.open(ModalEditComponent, {
       width: '600px',
       data: { task: { ...task } } 
@@ -79,6 +80,27 @@ export class DashboardComponent implements OnInit {
       },
       (error) => {
         console.error('Error deleting task:', error);
+      }
+    );
+  }
+
+  onStatusFilterChange(event: any) {
+    this.statusFilter = event.target.value;
+    this.filterTasks();
+  }
+
+  onPersonFilterChange(event: any) {
+    this.personFilter = event.target.value;
+    this.filterTasks();
+  }
+
+  filterTasks() {
+    this.serviceService.getFilteredTasks(this.statusFilter, this.personFilter).subscribe(
+      (data) => {
+        this.tasks = data;
+      },
+      (error) => {
+        console.error('Error fetching filtered tasks:', error);
       }
     );
   }

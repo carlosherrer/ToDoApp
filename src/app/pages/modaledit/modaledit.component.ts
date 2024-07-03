@@ -17,12 +17,13 @@ export class ModalEditComponent {
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<ModalEditComponent>,
+    //aqui hubo un error @Inject(MAT_DIALOG) public data: any,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private serviceService: ServiceService
   ) {
     this.taskForm = this.fb.group({
       taskName: [data.task.taskName, Validators.required],
-      taskDescription: [data.task.taskDescription, Validators.required],
+      taskDescription: [data.task.taskDescription],
       status: [data.task.status, Validators.required],
       assignedPerson: [data.task.assignedPerson, Validators.required]
     });
