@@ -70,4 +70,16 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
+
+  deleteTask(taskId: number): void {
+    this.serviceService.deleteTask(taskId).subscribe(
+      (response) => {
+        console.log('Task deleted successfully', response);
+        this.fetchTasks();
+      },
+      (error) => {
+        console.error('Error deleting task:', error);
+      }
+    );
+  }
 }
